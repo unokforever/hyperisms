@@ -37,6 +37,11 @@ class HyperismsDB {
 
   save() {
     const data = this.db.export();
+    // Ensure directory exists before writing
+    const dir = path.dirname(this.dbPath);
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
     fs.writeFileSync(this.dbPath, data);
   }
 
