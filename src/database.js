@@ -13,6 +13,20 @@ class HyperismsDB {
   async init() {
     const SQL = await initSqlJs();
 
+    // If volume path doesn't have a db, copy the bundled one from /app
+    if (process.env.RAILWAY_VOLUME_MOUNT_PATH && !fs.existsSync(this.dbPath)) {
+      const bundledDb = path.join(__dirname, '..', 'hyperisms.db');
+      if (fs.existsSync(bundledDb)) {
+        console.log('Migrating bundled database to volume...');
+        const dir = path.dirname(this.dbPath);
+        if (!fs.existsSync(dir)) {
+          fs.mkdirSync(dir, { recursive: true });
+        }
+        fs.copyFileSync(bundledDb, this.dbPath);
+        console.log('Database migrated successfully!');
+      }
+    }
+
     if (fs.existsSync(this.dbPath)) {
       const buffer = fs.readFileSync(this.dbPath);
       this.db = new SQL.Database(buffer);
