@@ -25,8 +25,7 @@ class HyperismsDB {
       console.log(`Bundled DB: ${bundledDb} (exists: ${bundledDbExists}, size: ${bundledDbSize})`);
 
       // Copy bundled db if it has data and volume doesn't, or if sizes differ
-      // Force migration flag - set to true once to force copy, then set back to false
-      const forceMigration = true;
+      const forceMigration = false;
       if (bundledDbExists && (forceMigration || bundledDbSize > volumeDbSize)) {
         console.log('Migrating bundled database to volume...');
         const dir = path.dirname(this.dbPath);
