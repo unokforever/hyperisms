@@ -1,0 +1,21 @@
+{
+  "name": "hyperisms-bot",
+  "version": "1.0.0",
+  "description": "A Discord bot to store and retrieve Hyper's funny quotes",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node src/index.js"
+  },
+  "keywords": ["discord", "bot", "quotes"],
+  "author": "",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "discord.js": "^14.14.1",
+    "sql.js": "^1.10.3",
+    "dotenv": "^16.3.1"
+  }
+}

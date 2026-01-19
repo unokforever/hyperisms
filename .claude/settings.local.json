@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install:*)",
+      "Bash(npm start)",
+      "Bash(if exist hyperisms.db del hyperisms.db)",
+      "Bash(del:*)"
+    ]
+  }
+}
