@@ -12,11 +12,20 @@ class HyperismsDB {
 
   async init() {
     const SQL = await initSqlJs();
+    const bundledDb = path.join(__dirname, '..', 'hyperisms.db');
 
-    // If volume path doesn't have a db, copy the bundled one from /app
-    if (process.env.RAILWAY_VOLUME_MOUNT_PATH && !fs.existsSync(this.dbPath)) {
-      const bundledDb = path.join(__dirname, '..', 'hyperisms.db');
-      if (fs.existsSync(bundledDb)) {
+    // If on Railway with volume, migrate bundled db if volume db is missing or empty
+    if (process.env.RAILWAY_VOLUME_MOUNT_PATH) {
+      const volumeDbExists = fs.existsSync(this.dbPath);
+      const volumeDbSize = volumeDbExists ? fs.statSync(this.dbPath).size : 0;
+      const bundledDbExists = fs.existsSync(bundledDb);
+      const bundledDbSize = bundledDbExists ? fs.statSync(bundledDb).size : 0;
+
+      console.log(`Volume DB: ${this.dbPath} (exists: ${volumeDbExists}, size: ${volumeDbSize})`);
+      console.log(`Bundled DB: ${bundledDb} (exists: ${bundledDbExists}, size: ${bundledDbSize})`);
+
+      // Copy bundled db if volume db doesn't exist or is smaller (empty/new)
+      if (bundledDbExists && bundledDbSize > volumeDbSize) {
         console.log('Migrating bundled database to volume...');
         const dir = path.dirname(this.dbPath);
         if (!fs.existsSync(dir)) {
