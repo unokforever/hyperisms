@@ -4,7 +4,9 @@ const path = require('path');
 
 class HyperismsDB {
   constructor() {
-    this.dbPath = path.join(__dirname, '..', 'hyperisms.db');
+    // Use Railway volume if available, otherwise use local directory
+    const dataDir = process.env.RAILWAY_VOLUME_MOUNT_PATH || path.join(__dirname, '..');
+    this.dbPath = path.join(dataDir, 'hyperisms.db');
     this.db = null;
   }
 
