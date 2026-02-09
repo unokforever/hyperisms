@@ -5,6 +5,8 @@ const HyperismsDB = require('./database');
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.MessageContent,
   ],
 });
 
@@ -112,6 +114,20 @@ client.on('interactionCreate', async (interaction) => {
     const replyMethod = interaction.replied || interaction.deferred ? 'followUp' : 'reply';
     await interaction[replyMethod]({ content: 'An error occurred while processing your command.', flags: MessageFlags.Ephemeral });
   }
+});
+
+// Reply with a random hyperism when the bot is @mentioned
+client.on('messageCreate', async (message) => {
+  if (message.author.bot) return;
+  if (!message.mentions.has(client.user)) return;
+
+  const hyperism = db.getRandomHyperism();
+
+  if (!hyperism) {
+    return message.reply('No hyperisms yet! Add one with `/hyperism new:<quote>`');
+  }
+
+  await message.reply(`"${hyperism.quote}" - Hyper #${hyperism.id}`);
 });
 
 process.on('SIGINT', () => {
